@@ -126,19 +126,19 @@ app.post('/submit-listener', async (req, res) => {
     try {
         const { name, email, password } = req.body;
   
-        // Check if the email already exists in the database
+    
         const existingUser = await db.query("SELECT * FROM Listeners WHERE Email = ?", [email]);
         if (existingUser.length > 0) {
             return res.status(400).json({ message: "Email already exists" });
         }
   
-        // Create a new Listener instance
+        
         const newListener = new Listener(name, email, password);
   
-        // Add the user to the database
+        
         await newListener.addUser();
   
-        res.redirect('/'); // Redirect to login page after successful signup
+        res.redirect('/');
     } catch (error) {
         console.error("Error in signup:", error);
         res.status(500).json({ message: "Internal server error" });
@@ -159,10 +159,10 @@ app.post('/add-show', async (req, res) => {
     try {
         const { title, description, category, coverImageUrl, releaseDate, podcasterId } = req.body;
   
-        // Create a new Show instance
+        
         const newShow = new Show(title, description, category, coverImageUrl, releaseDate, podcasterId);
   
-        // Add the show to the database
+        
         await newShow.addShow();
   
         res.status(201).json({ message: "Show added successfully" });
@@ -179,7 +179,7 @@ app.post('/authenticate', async (req, res) => {
   
     try {
   
-        // Fetch user by email
+        
         const user = await Listener.getUserByEmail(email);
         uId = await user.getIdFromEmail();
         if (!user) {
@@ -193,7 +193,7 @@ app.post('/authenticate', async (req, res) => {
             return res.status(401).json({ message: "Invalid email or password" });
         }
    // Set session variables
-        req.session.uid = uId;// Assuming Listener model has an 'id' property
+        req.session.uid = uId;
         req.session.loggedIn = true;
               // Authentication successful
         return res.redirect('/'); 
